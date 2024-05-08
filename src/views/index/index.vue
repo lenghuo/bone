@@ -9,7 +9,6 @@
         embedded
         :bordered="false"
       >
-        <div style="margin-bottom: 20px;">Calculate Model: Tb.Ar = {{ tbArConstant.sex }} × Sex + {{ tbArConstant.height }} × Height + {{ tbArConstant.alp }} × ALP + {{ tbArConstant.ctx }} × β-CTX</div>
         <n-form ref="tbArFormRef" :model="tbArFormValue">
           <n-form-item label="Sex:" path="tbArFormValue.sex">
             <n-radio-group v-model:value="tbArFormValue.sex">
@@ -55,7 +54,6 @@
         embedded
         :bordered="false"
       >
-        <div style="margin-bottom: 20px;">Calculate Model: Ct.vBMD = {{ ctVBMDConstant.sex }} × Sex + {{ ctVBMDConstant.height }} × Height + {{ ctVBMDConstant.mdbtll }} × Maximum distance between two lower limbs + {{ ctVBMDConstant.alp }} × ALP + {{ ctVBMDConstant.ctx }} × β-CTX</div>
         <n-form ref="ctvBMDFormRef" :model="ctVBMDFormValue">
           <n-form-item label="Sex:" path="ctVBMDFormValue.sex">
             <n-radio-group v-model:value="ctVBMDFormValue.sex">
@@ -108,7 +106,6 @@
         embedded
         :bordered="false"
       >
-        <div style="margin-bottom: 20px;">Calculate Model: Stiffness = {{ stiffnessConstant.sex }} × Sex + {{ stiffnessConstant.height }} × Height + {{ stiffnessConstant.alp }} × ALP</div>
         <n-form ref="tbArFormRef" :model="stiffnessFormValue">
           <n-form-item label="Sex:" path="stiffnessFormValue.sex">
             <n-radio-group v-model:value="stiffnessFormValue.sex">
@@ -211,11 +208,11 @@ const calculatorTbAr = () => {
   const value = calcOne(tbArFormValue.value)
   result.value.one = value
 }
-function calcOne(model: any) {
-  const sexMul = Decimal.mul(model.sex, 68.670)
-  const heightMul = Decimal.mul(model.height, 8.924)
-  const alpMul = Decimal.mul(model.alp, 0.238)
-  const ctxMul = Decimal.mul(model.ctx, 46.452)
+function calcOne(model: TbArModel) {
+  const sexMul = Decimal.mul(model.sex, tbArConstant.value.sex)
+  const heightMul = Decimal.mul(model.height, tbArConstant.value.height)
+  const alpMul = Decimal.mul(model.alp, tbArConstant.value.alp)
+  const ctxMul = Decimal.mul(model.ctx, tbArConstant.value.ctx)
   return new Decimal(sexMul).add(heightMul).add(alpMul).add(ctxMul)
 }
 function calcCTVBMD() {
