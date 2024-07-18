@@ -136,7 +136,31 @@
                   </div>
                 </n-form>
               </n-gi>
-              <n-gi :span="3">3</n-gi>
+              <n-gi :span="3">
+                <n-card title="Status/Out">
+                  <n-spin :show="showThree">
+                    <n-alert :type="typeThree ? 'success' : 'info'">
+                      {{ typeThree ? 'Calculation complete.' : 'Ready for calculation.' }}
+                    </n-alert>
+                  </n-spin>
+                  <n-table v-show="typeThree" :bordered="false" :single-line="false">
+                    <thead>
+                      <tr>
+                        <th>fit</th>
+                        <th>lwr</th>
+                        <th>upr</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>{{ threeValue[0] }}</th>
+                        <th>{{ threeValue[1] }}</th>
+                        <th>{{ threeValue[2] }}</th>
+                      </tr>
+                    </tbody>
+                  </n-table>
+                </n-card>
+              </n-gi>
             </n-grid>
           </n-tab-pane>
         </n-tabs>
@@ -147,6 +171,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { Decimal } from 'decimal.js'
+import axios from 'axios'
 interface TbArModel {
   sex: number;
   height: number;
@@ -228,7 +253,22 @@ function calcTwo(model: ctVBMDModel) {
             .add(Decimal.mul(model.alp, ctVBMDConstant.value.alp))
             .add(Decimal.mul(model.ctx, ctVBMDConstant.value.ctx))
 }
+const showThree = ref(false)
+const typeThree = ref(false)
+const threeValue = ref([])
 function calcStiffness() {
+  showThree.value = true
+  typeThree.value = false
+  axios.post('/api/r/model_s2', {
+    sex: stiffnessFormValue.value.sex,
+    height: stiffnessFormValue.value.height,
+    alp: stiffnessFormValue.value.alp
+  }).then((res: any) => {
+    showThree.value = false
+    typeThree.value = true
+    threeValue.value = res.data.data
+    // console.log(res)
+  })
   const value = calcThree(stiffnessFormValue.value)
   result.value.three = value
 }
