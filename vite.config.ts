@@ -10,4 +10,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://192.168.0.10:8080',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        rewrite: (path) => path.replace(new RegExp('^/api'), '')
+      }
+    }
+  }
 })

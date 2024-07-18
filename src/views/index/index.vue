@@ -5,141 +5,143 @@
         The calculator of trabecular area(Tb.Ar), cortical volmnetric bone mineral density(Ct.vBMD), stiffness of the distal tibia of the Chinese adolescent and pediatric patients with X-linked hypophosphatemia
       </n-card>
       <n-card
-        title="The optimal calculating model of Tb.Ar of the distal tibia"
+        title="Model For Test"
         embedded
         :bordered="false"
       >
-        <n-form ref="tbArFormRef" :model="tbArFormValue">
-          <n-form-item label="Sex:" path="tbArFormValue.sex">
-            <n-radio-group v-model:value="tbArFormValue.sex">
-              <n-space>
-                <n-radio :value="0">Female = 0</n-radio>
-                <n-radio :value="1">Male = 1</n-radio>
-              </n-space>
-            </n-radio-group>
-          </n-form-item>
-          <n-form-item label="Height:">
-            <n-input v-model:value="tbArFormValue.height">
-              <template #suffix>
-                cm
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item label="ALP:">
-            <n-input v-model:value="tbArFormValue.alp">
-              <template #suffix>
-                U/L
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item label="β-CTX:">
-            <n-input v-model:value="tbArFormValue.ctx">
-              <template #suffix>
-                ng/ml
-              </template>
-            </n-input>
-          </n-form-item>
-          <div>
-            <n-space>
-              <n-button type="primary" @click="calculatorTbAr">Calculate</n-button>
-            </n-space>
-          </div>
-        </n-form>
-        <template #footer>
-          <div style="font-weight: 500; font-size: 30px;"> Result: Tb.Ar = {{ result.one }}</div>
-        </template>
+        <n-tabs type="line" animated>
+          <n-tab-pane name="model_tb_ar_2" tab="Model_Tb.Ar2">
+            <n-grid x-gap="22" :cols="4">
+              <n-gi :span="1">
+                <n-form ref="tbArFormRef" :model="tbArFormValue">
+                  <n-form-item label="Sex:" path="tbArFormValue.sex">
+                    <n-radio-group v-model:value="tbArFormValue.sex">
+                      <n-space>
+                        <n-radio :value="0">Female = 0</n-radio>
+                        <n-radio :value="1">Male = 1</n-radio>
+                      </n-space>
+                    </n-radio-group>
+                  </n-form-item>
+                  <n-form-item label="Height:">
+                    <n-input v-model:value="tbArFormValue.height">
+                      <template #suffix>
+                        cm
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="ALP:">
+                    <n-input v-model:value="tbArFormValue.alp">
+                      <template #suffix>
+                        U/L
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="β-CTX:">
+                    <n-input v-model:value="tbArFormValue.ctx">
+                      <template #suffix>
+                        ng/ml
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <div>
+                    <n-space>
+                      <n-button type="primary" @click="calculatorTbAr">Calculate</n-button>
+                    </n-space>
+                  </div>
+                </n-form>
+              </n-gi>
+              <n-gi :span="3">4</n-gi>
+            </n-grid>
+          </n-tab-pane>
+          <n-tab-pane name="model_tb_v_bmd_2" tab="Model_Tb.vBMD2">
+            <n-grid x-gap="22" :cols="4">
+              <n-gi :span="1">
+                <n-form ref="ctvBMDFormRef" :model="ctVBMDFormValue">
+                  <n-form-item label="Sex:" path="ctVBMDFormValue.sex">
+                    <n-radio-group v-model:value="ctVBMDFormValue.sex">
+                      <n-space>
+                        <n-radio :value="0">Female = 0</n-radio>
+                        <n-radio :value="1">Male = 1</n-radio>
+                      </n-space>
+                    </n-radio-group>
+                  </n-form-item>
+                  <n-form-item label="Height:">
+                    <n-input v-model:value="ctVBMDFormValue.height">
+                      <template #suffix>
+                        cm
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="Maximum distance between two lower limbs:">
+                    <n-input v-model:value="ctVBMDFormValue.mdbtll">
+                      <template #suffix>
+                        cm
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="ALP:">
+                    <n-input v-model:value="ctVBMDFormValue.alp">
+                      <template #suffix>
+                        U/L
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="β-CTX:">
+                    <n-input v-model:value="ctVBMDFormValue.ctx">
+                      <template #suffix>
+                        ng/ml
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <div>
+                    <n-space>
+                      <n-button type="primary" @click="calcCTVBMD">Calculate</n-button>
+                    </n-space>
+                  </div>
+                </n-form>
+              </n-gi>
+              <n-gi :span="3">4</n-gi>
+            </n-grid>
+          </n-tab-pane>
+          <n-tab-pane name="model_s2" tab="Model_S2">
+            <n-grid x-gap="22" :cols="4">
+              <n-gi :span="1">
+                <n-form ref="tbArFormRef" :model="stiffnessFormValue">
+                  <n-form-item label="Sex:" path="stiffnessFormValue.sex">
+                    <n-radio-group v-model:value="stiffnessFormValue.sex">
+                      <n-space>
+                        <n-radio :value="0">Female = 0</n-radio>
+                        <n-radio :value="1">Male = 1</n-radio>
+                      </n-space>
+                    </n-radio-group>
+                  </n-form-item>
+                  <n-form-item label="Height:">
+                    <n-input v-model:value="stiffnessFormValue.height">
+                      <template #suffix>
+                        cm
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <n-form-item label="ALP:">
+                    <n-input v-model:value="stiffnessFormValue.alp">
+                      <template #suffix>
+                        U/L
+                      </template>
+                    </n-input>
+                  </n-form-item>
+                  <div>
+                    <n-space>
+                      <n-button type="primary" @click="calcStiffness">Calculate</n-button>
+                    </n-space>
+                  </div>
+                </n-form>
+              </n-gi>
+              <n-gi :span="3">3</n-gi>
+            </n-grid>
+          </n-tab-pane>
+        </n-tabs>
       </n-card>
-      <n-card
-        title="The optimal calculating model of Ct.vBMD of the distal tibia"
-        embedded
-        :bordered="false"
-      >
-        <n-form ref="ctvBMDFormRef" :model="ctVBMDFormValue">
-          <n-form-item label="Sex:" path="ctVBMDFormValue.sex">
-            <n-radio-group v-model:value="ctVBMDFormValue.sex">
-              <n-space>
-                <n-radio :value="0">Female = 0</n-radio>
-                <n-radio :value="1">Male = 1</n-radio>
-              </n-space>
-            </n-radio-group>
-          </n-form-item>
-          <n-form-item label="Height:">
-            <n-input v-model:value="ctVBMDFormValue.height">
-              <template #suffix>
-                cm
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item label="Maximum distance between two lower limbs:">
-            <n-input v-model:value="ctVBMDFormValue.mdbtll">
-              <template #suffix>
-                cm
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item label="ALP:">
-            <n-input v-model:value="ctVBMDFormValue.alp">
-              <template #suffix>
-                U/L
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item label="β-CTX:">
-            <n-input v-model:value="ctVBMDFormValue.ctx">
-              <template #suffix>
-                ng/ml
-              </template>
-            </n-input>
-          </n-form-item>
-          <div>
-            <n-space>
-              <n-button type="primary" @click="calcCTVBMD">Calculate</n-button>
-            </n-space>
-          </div>
-        </n-form>
-        <template #footer>
-          <div style="font-weight: 500; font-size: 30px;"> Result: Ct.vBMD = {{ result.two }}</div>
-        </template>
-      </n-card>
-      <n-card
-        title="The optimal calculating model of Stiffness of the distal tibia"
-        embedded
-        :bordered="false"
-      >
-        <n-form ref="tbArFormRef" :model="stiffnessFormValue">
-          <n-form-item label="Sex:" path="stiffnessFormValue.sex">
-            <n-radio-group v-model:value="stiffnessFormValue.sex">
-              <n-space>
-                <n-radio :value="0">Female = 0</n-radio>
-                <n-radio :value="1">Male = 1</n-radio>
-              </n-space>
-            </n-radio-group>
-          </n-form-item>
-          <n-form-item label="Height:">
-            <n-input v-model:value="stiffnessFormValue.height">
-              <template #suffix>
-                cm
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item label="ALP:">
-            <n-input v-model:value="stiffnessFormValue.alp">
-              <template #suffix>
-                U/L
-              </template>
-            </n-input>
-          </n-form-item>
-          <div>
-            <n-space>
-              <n-button type="primary" @click="calcStiffness">Calculate</n-button>
-            </n-space>
-          </div>
-        </n-form>
-        <template #footer>
-          <div style="font-weight: 500; font-size: 30px;"> Result: Stiffness = {{ result.three }}</div>
-        </template>
-      </n-card>
-  </n-flex>
+    </n-flex>
   </div>
 </template>
 <script lang="ts" setup>
