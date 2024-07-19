@@ -50,7 +50,27 @@
                   </div>
                 </n-form>
               </n-gi>
-              <n-gi :span="3">4</n-gi>
+              <n-gi :span="3">
+                <n-card title="Status/Out">
+                  <n-spin :show="showOne">
+                    <n-alert :type="typeOne ? 'success' : 'info'">
+                      {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
+                    </n-alert>
+                  </n-spin>
+                  <n-table v-show="typeOne" :bordered="false" :single-line="false">
+                    <thead>
+                      <tr>
+                        <th v-for="(data, index) in tableHeader" :key="index">{{ data }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th v-for="(data, index) in valueOne" :key="index">{{ data }}</th>
+                      </tr>
+                    </tbody>
+                  </n-table>
+                </n-card>
+              </n-gi>
             </n-grid>
           </n-tab-pane>
           <n-tab-pane name="model_tb_v_bmd_2" tab="Model_Tb.vBMD2">
@@ -73,7 +93,7 @@
                     </n-input>
                   </n-form-item>
                   <n-form-item label="Maximum distance between two lower limbs:">
-                    <n-input v-model:value="ctVBMDFormValue.mdbtll">
+                    <n-input v-model:value="ctVBMDFormValue.distanceCm">
                       <template #suffix>
                         cm
                       </template>
@@ -100,7 +120,27 @@
                   </div>
                 </n-form>
               </n-gi>
-              <n-gi :span="3">4</n-gi>
+              <n-gi :span="3">
+                <n-card title="Status/Out">
+                  <n-spin :show="showTwo">
+                    <n-alert :type="typeTwo ? 'success' : 'info'">
+                      {{ typeTwo ? 'Calculation complete.' : 'Ready for calculation.' }}
+                    </n-alert>
+                  </n-spin>
+                  <n-table v-show="typeTwo" :bordered="false" :single-line="false">
+                    <thead>
+                      <tr>
+                        <th v-for="(data, index) in tableHeader" :key="index">{{ data }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th v-for="(data, index) in twoValue" :key="index">{{ data }}</th>
+                      </tr>
+                    </tbody>
+                  </n-table>
+                </n-card>
+              </n-gi>
             </n-grid>
           </n-tab-pane>
           <n-tab-pane name="model_s2" tab="Model_S2">
@@ -146,9 +186,7 @@
                   <n-table v-show="typeThree" :bordered="false" :single-line="false">
                     <thead>
                       <tr>
-                        <th>fit</th>
-                        <th>lwr</th>
-                        <th>upr</th>
+                        <th v-for="(data, index) in tableHeader" :key="index">{{ data }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -170,8 +208,9 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Decimal } from 'decimal.js'
+import { Decimal } from 'decimal.js' 
 import axios from 'axios'
+const tableHeader = ref<Array<string>>(['fit', 'lwr', 'upr'])
 interface TbArModel {
   sex: number;
   height: number;
@@ -187,14 +226,14 @@ const tbArConstant = ref<TbArModel>({
 interface ctVBMDModel {
   sex: number
   height: number
-  mdbtll: number
+  distanceCm: number
   alp: number
   ctx: number
 }
 const ctVBMDConstant = ref<ctVBMDModel>({
   sex: -21.910,
   height: 1.002,
-  mdbtll: -1.250,
+  distanceCm: -1.250,
   alp: -0.161,
   ctx: -38.416
 })
@@ -222,7 +261,7 @@ const tbArFormValue = ref<TbArModel>({
 const ctVBMDFormValue = ref<ctVBMDModel>({
   sex: 0,
   height: 0,
-  mdbtll: 0,
+  distanceCm: 0,
   alp: 0,
   ctx: 0
 })
@@ -231,9 +270,19 @@ const stiffnessFormValue = ref<StiffnessModel>({
   height: 0,
   alp: 0,
 })
+const showOne = ref<boolean>(false)
+const typeOne = ref<boolean>(false)
+const valueOne = ref<Array<any>>([])
 const calculatorTbAr = () => {
-  const value = calcOne(tbArFormValue.value)
-  result.value.one = value
+  showOne.value = true
+  typeOne.value = false
+  axios.post('/api/r/model_tb_ar_2', {
+    ...tbArFormValue.value
+  }).then((res: any) => {
+    showOne.value = false
+    typeOne.value = true
+    valueOne.value = res.data.data
+  })
 }
 function calcOne(model: TbArModel) {
   const sexMul = Decimal.mul(model.sex, tbArConstant.value.sex)
@@ -242,14 +291,26 @@ function calcOne(model: TbArModel) {
   const ctxMul = Decimal.mul(model.ctx, tbArConstant.value.ctx)
   return new Decimal(sexMul).add(heightMul).add(alpMul).add(ctxMul)
 }
+const showTwo = ref(false)
+const typeTwo = ref(false)
+const twoValue = ref([])
 function calcCTVBMD() {
+  showTwo.value = true
+  typeTwo.value = false
+  axios.post('/api/r/model_ct_v_bmd_2', {
+    ...ctVBMDFormValue.value
+  }).then((res) => {
+    showTwo.value = false
+    typeTwo.value = true
+    twoValue.value = res.data.data
+  })
   const value = calcTwo(ctVBMDFormValue.value)
   result.value.two = value
 }
 function calcTwo(model: ctVBMDModel) {
   return new Decimal(Decimal.mul(model.sex, ctVBMDConstant.value.sex))
             .add(Decimal.mul(model.height, ctVBMDConstant.value.height))
-            .add(Decimal.mul(model.mdbtll, ctVBMDConstant.value.mdbtll))
+            .add(Decimal.mul(model.distanceCm, ctVBMDConstant.value.distanceCm))
             .add(Decimal.mul(model.alp, ctVBMDConstant.value.alp))
             .add(Decimal.mul(model.ctx, ctVBMDConstant.value.ctx))
 }
