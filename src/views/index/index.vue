@@ -208,7 +208,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Decimal } from 'decimal.js' 
+// import { Decimal } from 'decimal.js' 
 import axios from 'axios'
 const tableHeader = ref<Array<string>>(['fit', 'lwr', 'upr'])
 interface TbArModel {
@@ -217,12 +217,7 @@ interface TbArModel {
   alp: number;
   ctx: number;
 }
-const tbArConstant = ref<TbArModel>({
-  sex: 68.670,
-  height: 8.924,
-  alp: 0.238,
-  ctx: 46.452,
-})
+
 interface ctVBMDModel {
   sex: number
   height: number
@@ -230,28 +225,13 @@ interface ctVBMDModel {
   alp: number
   ctx: number
 }
-const ctVBMDConstant = ref<ctVBMDModel>({
-  sex: -21.910,
-  height: 1.002,
-  distanceCm: -1.250,
-  alp: -0.161,
-  ctx: -38.416
-})
+
 interface StiffnessModel {
   sex: number,
   height: number,
   alp: number,
 }
-const stiffnessConstant = ref<StiffnessModel>({
-  sex: 19340.879,
-  height: 1752.351,
-  alp: -43.616
-})
-const result = ref<any>({
-  one: 0,
-  two: 0,
-  three: 0,
-})
+
 const tbArFormValue = ref<TbArModel>({
   sex: 0,
   height: 0,
@@ -284,13 +264,6 @@ const calculatorTbAr = () => {
     valueOne.value = res.data.data
   })
 }
-function calcOne(model: TbArModel) {
-  const sexMul = Decimal.mul(model.sex, tbArConstant.value.sex)
-  const heightMul = Decimal.mul(model.height, tbArConstant.value.height)
-  const alpMul = Decimal.mul(model.alp, tbArConstant.value.alp)
-  const ctxMul = Decimal.mul(model.ctx, tbArConstant.value.ctx)
-  return new Decimal(sexMul).add(heightMul).add(alpMul).add(ctxMul)
-}
 const showTwo = ref(false)
 const typeTwo = ref(false)
 const twoValue = ref([])
@@ -304,15 +277,6 @@ function calcCTVBMD() {
     typeTwo.value = true
     twoValue.value = res.data.data
   })
-  const value = calcTwo(ctVBMDFormValue.value)
-  result.value.two = value
-}
-function calcTwo(model: ctVBMDModel) {
-  return new Decimal(Decimal.mul(model.sex, ctVBMDConstant.value.sex))
-            .add(Decimal.mul(model.height, ctVBMDConstant.value.height))
-            .add(Decimal.mul(model.distanceCm, ctVBMDConstant.value.distanceCm))
-            .add(Decimal.mul(model.alp, ctVBMDConstant.value.alp))
-            .add(Decimal.mul(model.ctx, ctVBMDConstant.value.ctx))
 }
 const showThree = ref(false)
 const typeThree = ref(false)
@@ -330,13 +294,6 @@ function calcStiffness() {
     threeValue.value = res.data.data
     // console.log(res)
   })
-  const value = calcThree(stiffnessFormValue.value)
-  result.value.three = value
-}
-function calcThree(model: StiffnessModel) {
-  return new Decimal(Decimal.mul(model.sex, stiffnessConstant.value.sex))
-            .add(Decimal.mul(model.alp, stiffnessConstant.value.alp))
-            .add(Decimal.mul(model.height, stiffnessConstant.value.height))
 }
 </script>
 <style scope>
