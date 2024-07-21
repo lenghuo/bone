@@ -56,7 +56,7 @@
             </n-form>
           </n-gi>
           <n-gi :span="3">
-            <n-card title="Result For Model_Tb.Ar2">
+            <n-card title="Result For Model_Tb.Ar">
               <n-spin :show="showOne">
                 <n-alert :type="typeOne ? 'success' : 'info'">
                   {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
@@ -75,7 +75,7 @@
                 </tbody>
               </n-table>
             </n-card>
-            <n-card title="Result For Model_Tb.vBMD2">
+            <n-card title="Result For Model_Ct.vBMD">
               <n-spin :show="showOne">
                 <n-alert :type="typeOne ? 'success' : 'info'">
                   {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
@@ -94,7 +94,7 @@
                 </tbody>
               </n-table>
             </n-card>
-            <n-card title="Result For Model_S2">
+            <n-card title="Result For Model_Stiffness">
               <n-spin :show="showOne">
                 <n-alert :type="typeOne ? 'success' : 'info'">
                   {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
