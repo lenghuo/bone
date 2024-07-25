@@ -141,54 +141,11 @@ const form = ref<Model>({
   ctx: 0
 })
 
-const showOne = ref<boolean>(false)
-const typeOne = ref<boolean>(false)
+
 const valueOne = ref<Array<any>>([])
-const calculatorTbAr = () => {
-  showOne.value = true
-  typeOne.value = false
-  axios.post('/api/r/model_tb_ar_2', {
-    sex: form.value.sex,
-    height: form.value.height,
-    alp: form.value.alp,
-    ctx: form.value.ctx
-  }).then((res: any) => {
-    showOne.value = false
-    typeOne.value = true
-    valueOne.value = res.data.data
-  })
-}
-const showTwo = ref(false)
-const typeTwo = ref(false)
 const twoValue = ref([])
-function calcCTVBMD() {
-  showTwo.value = true
-  typeTwo.value = false
-  axios.post('/api/r/model_ct_v_bmd_2', {
-    ...form.value
-  }).then((res: any) => {
-    showTwo.value = false
-    typeTwo.value = true
-    twoValue.value = res.data.data
-  })
-}
-const showThree = ref(false)
-const typeThree = ref(false)
 const threeValue = ref([])
-function calcStiffness() {
-  showThree.value = true
-  typeThree.value = false
-  axios.post('/api/r/model_s2', {
-    sex: form.value.sex,
-    height: form.value.height,
-    alp: form.value.alp
-  }).then((res: any) => {
-    showThree.value = false
-    typeThree.value = true
-    threeValue.value = res.data.data
-    // console.log(res)
-  })
-}
+
 const show = ref<boolean>(false)
 const type = ref<boolean>(false)
 // const r = ref<any>()
