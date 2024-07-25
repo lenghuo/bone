@@ -21,32 +21,32 @@
                 </n-radio-group>
               </n-form-item>
               <n-form-item label="Height:">
-                <n-input v-model:value="form.height">
+                <n-input-number v-model:value="form.height" :show-button="false">
                   <template #suffix>
                     cm
                   </template>
-                </n-input>
+                </n-input-number>
               </n-form-item>
               <n-form-item label="Maximum distance between two lower limbs:">
-                <n-input v-model:value="form.distanceCm">
+                <n-input-number v-model:value="form.distanceCm" :show-button="false">
                   <template #suffix>
                     cm
                   </template>
-                </n-input>
+                </n-input-number>
               </n-form-item>
               <n-form-item label="ALP:">
-                <n-input v-model:value="form.alp">
+                <n-input-number v-model:value="form.alp" :show-button="false">
                   <template #suffix>
                     U/L
                   </template>
-                </n-input>
+                </n-input-number>
               </n-form-item>
               <n-form-item label="β-CTX:">
-                <n-input v-model:value="form.ctx">
+                <n-input-number v-model:value="form.ctx" :show-button="false">
                   <template #suffix>
                     ng/ml
                   </template>
-                </n-input>
+                </n-input-number>
               </n-form-item>
               <div>
                 <n-space>
@@ -57,12 +57,12 @@
           </n-gi>
           <n-gi :span="3">
             <n-card title="Result For Model_Tb.Ar">
-              <n-spin :show="showOne">
-                <n-alert :type="typeOne ? 'success' : 'info'">
-                  {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
+              <n-spin :show="show">
+                <n-alert :type="type ? 'success' : 'info'">
+                  {{ type ? 'Calculation complete.' : 'Ready for calculation.' }}
                 </n-alert>
               </n-spin>
-              <n-table v-show="typeOne" :bordered="false" :single-line="false">
+              <n-table v-show="type" :bordered="false" :single-line="false">
                 <thead>
                   <tr>
                     <th v-for="(data, index) in tableHeader" :key="index">{{ data }}</th>
@@ -70,18 +70,18 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <th v-for="(data, index) in valueOne" :key="index">{{ data }} mm²</th>
+                    <th v-for="(data, index) in valueOne" :key="index">{{ round(data) }} mm²</th>
                   </tr>
                 </tbody>
               </n-table>
             </n-card>
             <n-card title="Result For Model_Ct.vBMD">
-              <n-spin :show="showOne">
-                <n-alert :type="typeOne ? 'success' : 'info'">
-                  {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
+              <n-spin :show="show">
+                <n-alert :type="type ? 'success' : 'info'">
+                  {{ type ? 'Calculation complete.' : 'Ready for calculation.' }}
                 </n-alert>
               </n-spin>
-              <n-table v-show="typeOne" :bordered="false" :single-line="false">
+              <n-table v-show="type" :bordered="false" :single-line="false">
                 <thead>
                   <tr>
                     <th v-for="(data, index) in tableHeader" :key="index">{{ data }}</th>
@@ -89,18 +89,18 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <th v-for="(data, index) in twoValue" :key="index">{{ data }} mgHA/cm³</th>
+                    <th v-for="(data, index) in twoValue" :key="index">{{ round(data) }} mgHA/cm³</th>
                   </tr>
                 </tbody>
               </n-table>
             </n-card>
             <n-card title="Result For Model_Stiffness">
-              <n-spin :show="showOne">
-                <n-alert :type="typeOne ? 'success' : 'info'">
-                  {{ typeOne ? 'Calculation complete.' : 'Ready for calculation.' }}
+              <n-spin :show="show">
+                <n-alert :type="type ? 'success' : 'info'">
+                  {{ type ? 'Calculation complete.' : 'Ready for calculation.' }}
                 </n-alert>
               </n-spin>
-              <n-table v-show="typeOne" :bordered="false" :single-line="false">
+              <n-table v-show="type" :bordered="false" :single-line="false">
                 <thead>
                   <tr>
                     <th v-for="(data, index) in tableHeader" :key="index">{{ data }}</th>
@@ -108,7 +108,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <th v-for="(data, index) in threeValue" :key="index">{{ data }} N/mm</th>
+                    <th v-for="(data, index) in threeValue" :key="index">{{ round(data) }} N/mm</th>
                   </tr>
                 </tbody>
               </n-table>
@@ -140,6 +140,7 @@ const form = ref<Model>({
   alp: 0,
   ctx: 0
 })
+
 const showOne = ref<boolean>(false)
 const typeOne = ref<boolean>(false)
 const valueOne = ref<Array<any>>([])
@@ -188,10 +189,23 @@ function calcStiffness() {
     // console.log(res)
   })
 }
+const show = ref<boolean>(false)
+const type = ref<boolean>(false)
+// const r = ref<any>()
 const calc = () => {
-  calculatorTbAr()
-  calcCTVBMD()
-  calcStiffness()
+  show.value = true
+  type.value = false
+  axios.post('/api/r/calc', { ...form.value }).then((res: any) => {
+    show.value = false
+    type.value = true
+    const {model_tb_ar, model_ct_v_bmd, model_s2} = res.data.data
+    valueOne.value = model_tb_ar
+    twoValue.value = model_ct_v_bmd
+    threeValue.value = model_s2 
+  })
+}
+function round(value: number) {
+  return Math.round(value * 10) / 10
 }
 </script>
 <style scope>
