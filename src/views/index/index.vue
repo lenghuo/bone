@@ -11,8 +11,8 @@
       >
         <n-grid :x-gap="22" :cols="4">
           <n-gi :span="1">
-            <n-form ref="ctvBMDFormRef" :model="form">
-              <n-form-item label="Sex:" path="form.sex">
+            <n-form ref="formRef" :model="form" :rules="rules">
+              <n-form-item label="Sex:" path="sex">
                 <n-radio-group v-model:value="form.sex">
                   <n-space>
                     <n-radio :value="0">Female = 0</n-radio>
@@ -20,28 +20,28 @@
                   </n-space>
                 </n-radio-group>
               </n-form-item>
-              <n-form-item label="Height:">
+              <n-form-item label="Height:" path="height">
                 <n-input-number v-model:value="form.height" :show-button="false">
                   <template #suffix>
                     cm
                   </template>
                 </n-input-number>
               </n-form-item>
-              <n-form-item label="Maximum distance between two lower limbs:">
+              <n-form-item label="Maximum distance between two lower limbs:" path="distanceCm">
                 <n-input-number v-model:value="form.distanceCm" :show-button="false">
                   <template #suffix>
                     cm
                   </template>
                 </n-input-number>
               </n-form-item>
-              <n-form-item label="ALP:">
+              <n-form-item label="ALP:" path="alp">
                 <n-input-number v-model:value="form.alp" :show-button="false">
                   <template #suffix>
                     U/L
                   </template>
                 </n-input-number>
               </n-form-item>
-              <n-form-item label="β-CTX:">
+              <n-form-item label="β-CTX:" path="ctx">
                 <n-input-number v-model:value="form.ctx" :show-button="false">
                   <template #suffix>
                     ng/ml
@@ -123,22 +123,25 @@
 import { ref } from 'vue'
 // import { Decimal } from 'decimal.js' 
 import axios from 'axios'
+import type { FormRules, FormInst } from 'naive-ui'
+
+const formRef = ref<FormInst | null>(null)
 const tableHeader = ref<Array<string>>(['fit', 'lwr', 'upr'])
 
 interface Model {
-  sex: number
-  height: number
-  distanceCm: number
-  alp: number
-  ctx: number
+  sex: number | null
+  height: number | null
+  distanceCm: number | null
+  alp: number | null
+  ctx: number | null
 }
 
 const form = ref<Model>({
-  sex: 0,
-  height: 0,
-  distanceCm: 0,
-  alp: 0,
-  ctx: 0
+  sex: 1,
+  height: null,
+  distanceCm: null,
+  alp: null,
+  ctx: null
 })
 
 
@@ -150,19 +153,39 @@ const show = ref<boolean>(false)
 const type = ref<boolean>(false)
 // const r = ref<any>()
 const calc = () => {
-  show.value = true
-  type.value = false
-  axios.post('/api/r/calc', { ...form.value }).then((res: any) => {
-    show.value = false
-    type.value = true
-    const {model_tb_ar, model_ct_v_bmd, model_s2} = res.data.data
-    valueOne.value = model_tb_ar
-    twoValue.value = model_ct_v_bmd
-    threeValue.value = model_s2 
+  formRef.value?.validate((errors) => {
+    if (!errors) {
+      show.value = true
+      type.value = false
+      axios.post('/api/r/calc', { ...form.value }).then((res: any) => {
+        show.value = false
+        type.value = true
+        const {model_tb_ar, model_ct_v_bmd, model_s2} = res.data.data
+        valueOne.value = model_tb_ar
+        twoValue.value = model_ct_v_bmd
+        threeValue.value = model_s2 
+      })
+    } else {
+      console.log(errors)
+    }
   })
 }
 function round(value: number) {
   return Math.round(value * 10) / 10
+}
+const rules: FormRules = {
+  height: [
+    { required: true, type: 'number', message: 'Height cannot be empty', trigger: ['blur', 'input'] },
+  ],
+  ctx: [
+    { required: true, type: 'number', message: 'CTX cannot be empty', trigger: ['blur', 'input'] },
+  ],
+  alp: [
+    { required: true, type: 'number', message: 'ALP cannot be empty', trigger: ['blur', 'input'] },
+  ],
+  distanceCm: [
+    { required: true, type: 'number', message: 'DistanceCm cannot be empty', trigger: ['blur', 'input'] },
+  ]
 }
 </script>
 <style scope>
