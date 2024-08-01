@@ -1,11 +1,31 @@
 <template>
   <div class="main">
     <n-flex vertical>
-      <n-card title="Introduction" embedded>
-        The calculator of trabecular area(Tb.Ar), cortical volmnetric bone mineral density(Ct.vBMD), stiffness of the distal tibia of the Chinese adolescent and pediatric patients with X-linked hypophosphatemia
+      <n-card 
+        title="Introduction"
+        :border="false" 
+        embedded
+        :header-style="{fontWeight: 800, fontSize: '35px', fontFamily: 'Arial'}"
+      >
+        <div style="font-size: 16px;font-family: Arial;">
+          This is a calculator designed to estimate the trabecular area, cortical volumetric BMD, stiffness of the distal tibia of the adolescent and pediatric patients with X-linked hypophosphatemia, using clinical characteristics and biochemical indicators.
+        </div>
+      </n-card>
+      <n-card 
+        title="Note:"
+        :border="false" 
+        embedded
+        :header-style="{fontWeight: 800, fontFamily: 'Arial'}"
+      >
+        <div style="font-size: 16px;font-family: Arial;">
+          <ol>
+            <li>The calculator is recommended for use in individuals aged 4 to 18 years.</li>
+            <li>These calculation models have only been validated in Chinese adolescent and pediatric patients with X-linked hypophosphatemia.</li>
+            <li>Cortical volumetric BMD, cortical volumetric bone mineral density.</li>
+          </ol>
+        </div>
       </n-card>
       <n-card
-        title="Model For Test"
         embedded
         :bordered="false"
       >
@@ -56,7 +76,7 @@
             </n-form>
           </n-gi>
           <n-gi :span="3">
-            <n-card title="Result For Model_Tb.Ar">
+            <n-card title="Result of estimated trabecular area of the distal tibia">
               <n-spin :show="show">
                 <n-alert :type="type ? 'success' : 'info'">
                   {{ type ? 'Calculation complete.' : 'Ready for calculation.' }}
@@ -75,7 +95,7 @@
                 </tbody>
               </n-table>
             </n-card>
-            <n-card title="Result For Model_Ct.vBMD">
+            <n-card title="Result of estimated cortical volumetric BMD of the distal tibia">
               <n-spin :show="show">
                 <n-alert :type="type ? 'success' : 'info'">
                   {{ type ? 'Calculation complete.' : 'Ready for calculation.' }}
@@ -94,7 +114,7 @@
                 </tbody>
               </n-table>
             </n-card>
-            <n-card title="Result For Model_Stiffness">
+            <n-card title="Result of estimated stiffness of the distal tibia">
               <n-spin :show="show">
                 <n-alert :type="type ? 'success' : 'info'">
                   {{ type ? 'Calculation complete.' : 'Ready for calculation.' }}
@@ -126,7 +146,7 @@ import axios from 'axios'
 import type { FormRules, FormInst } from 'naive-ui'
 
 const formRef = ref<FormInst | null>(null)
-const tableHeader = ref<Array<string>>(['fit', 'lwr', 'upr'])
+const tableHeader = ref<Array<string>>(['mean', 'lower limit', 'upper limit'])
 
 interface Model {
   sex: number | null
@@ -192,5 +212,6 @@ const rules: FormRules = {
 .main {
   width: 100%;
   height: 100%;
+  font-family: Arial;
 }
 </style>
